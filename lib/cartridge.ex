@@ -12,8 +12,10 @@ defmodule Nex.Cartridge do
     end
   end
 
-  def parse(<<"NES", 26, data::binary>>) do
-    {header, rest} = split_header(data)
+  def parse(<<"NES", 26, header::binary-size(12), rest::binary>>) do
+    header = split_header(header)
+    IO.inspect header
+
     %Nex.Cartridge{data: rest, header: header}
   end
 
@@ -22,26 +24,41 @@ defmodule Nex.Cartridge do
   end
 
   # http://wiki.nesdev.com/w/index.php/INES
-  defp split_header(data) do
-    <<
-      prg_rom_16k_chunks::size(8),  # really byte 4
-      chr_rom_8k_chunks::size(8),   # byte 5
-      # flags6 
-      flag_6::size(8),                   # byte 6
-      flat_7::size(8),                   # byte 7
-      prg_ram_8k_chunks::size(8),   # byte 8, 0 is 1 for compat
-      flat_9::size(8),                   # byte 9
-      flat_10::size(8),
-      0::size(40),
-      rest::binary
-    >> = data
-    {
-      %{
-        prg_rom_16k_chunks: prg_rom_16k_chunks,
-        chr_rom_8k_chunks: chr_rom_8k_chunks,
-        prg_ram_8k_chunks: prg_ram_8k_chunks
-      },
-      rest
+  defp split_header(<<
+      prg_rom_16k_chunks::unsigned-integer,
+      chr_rom_8k_chunks::unsigned-integer,
+      flag_6::size(8), 
+      flag_7::size(8),
+      prg_ram_8k_chunks::unsigned-integer,
+      flag_9::size(8),
+      flag_10::size(8),
+      0::size(40)
+    >>) do
+
+    %{
+      prg_rom_16k_chunks: prg_rom_16k_chunks,
+      chr_rom_8k_chunks: chr_rom_8k_chunks,
+      prg_ram_8k_chunks: prg_ram_8k_chunks,
+      flag_6: Nex.Cartridge.INES.Flags6.parse(flag_6)
+    }
+  end
+end
+
+defmodule Nex.Cartridge.INES.Flags6 do
+  defstruct veritcal_mirroring:     false,
+            horizontal_mirroring:   false,
+            four_screen_vram:       false,
+            persistant_storage:     false,
+            trainer_exists:         false,
+            lower_mapper_nybble:    false
+
+  def parse(byte) do
+    use Bitwise
+
+    %Nex.Cartridge.INES.Flags6{
+      lower_mapper_nybble: byte &&& 0b0000_1111,
+      trainer_exists: 1 == (byte &&& 0b0010_0000),
+      persistant_storage: 1 == (byte &&& 0b0100_0000)
     }
   end
 end
