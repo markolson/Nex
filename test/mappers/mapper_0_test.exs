@@ -10,7 +10,11 @@ defmodule Nex.Mappers.Mapper_0Test do
   @rom <<76, 245, 197>>
 
   # $8000-$BFFF mirrors $C000-$FFFF and vice-versa
-  test "translates C000 -> 0000" do
+  test "translates C000 -> 8000" do
     assert 0x8000 = M.translate(0xC000)
+  end
+
+  test "leaves 8000 -> 8000 alone" do
+    assert 0x8000 = M.translate(0x8000)
   end
 end

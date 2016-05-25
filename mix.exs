@@ -16,7 +16,8 @@ defmodule Nex.Mixfile do
 
   defp deps do
     [
-      {:mix_test_watch, "~> 0.2", only: :dev}
+      {:mix_test_watch, "~> 0.2", only: :dev},
+      {:hexate,  ">= 0.5.0"}
     ]
   end
 end
