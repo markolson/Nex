@@ -9,7 +9,3 @@ defmodule Nex.Mappers do
 
   def get(id), do: get(to_string(id))
 end
-
-defprotocol Nex.Mapper do
-  def read(rom, address)
-end

@@ -12,4 +12,10 @@ defmodule Nex.CartridgeTest do
   test "parsing returns a INES struct if it's valid" do
     %Nex.Cartridge{} = Nex.Cartridge.load(__DIR__ <> "/roms/nestest/nestest.nes")
   end
+
+  test "program is a list of integers" do
+    %Nex.Cartridge{program: program} = Nex.Cartridge.load(__DIR__ <> "/roms/nestest/nestest.nes")
+    assert is_list(program)
+    assert [0x4C, 0xF5, 0xC5 | rest] = program
+  end
 end
