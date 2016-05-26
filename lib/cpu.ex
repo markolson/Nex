@@ -17,7 +17,7 @@ defmodule Nex.CPU do
   def run_instruction(cpu) do
     {cpu, [opcode]} = read_from_pc(cpu, 1)
     runner = Module.safe_concat(Nex.Opcodes, "O#{opcode}")
-    runner.run(cpu)
+    {cpu, cycles} = runner.run(cpu)
   end
 
   def read_from_pc(cpu, size) do
