@@ -4,14 +4,16 @@ defmodule Nex.CPU do
 	6502 Microprocessor, maybe.
 	"""
   defstruct registers: %Nex.CPU.Registers{
-                program_counter: 0
+                program_counter: 0x8000,
+                stack_pointer: 0xFD,
+                status: nil # should be 24 but ugh
             },
             cartridge: nil
 
   def boot(cartridge_path) do
     cart = Nex.Cartridge.load(cartridge_path)
     Logger.debug "[CPU]\tBooted"
-    %Nex.CPU{cartridge: cart} |> update_pc(0x8000)
+    %Nex.CPU{cartridge: cart}
   end
 
   def run_instruction(cpu) do
@@ -34,6 +36,13 @@ defmodule Nex.CPU do
     new_registers = %Nex.CPU.Registers{cpu.registers | program_counter: to}
     Logger.debug "[CPU]\tPC: $#{hpc(to)}"
     %Nex.CPU{cpu | registers: new_registers} 
+  end
+
+  def update_x(cpu, value) do
+    #TODO: something like new_status = set_status_flags(cpu.registers.status, value) ?
+    new_registers = %Nex.CPU.Registers{cpu.registers | x: value}
+    Logger.debug "[CPU]\tX: #{value}"
+    %Nex.CPU{cpu | registers: new_registers}
   end
 
   def hpc(%Nex.CPU{}=cpu), do: hpc(cpu.registers.program_counter)
