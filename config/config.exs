@@ -18,7 +18,7 @@ use Mix.Config
 #
 # Or configure a 3rd-party app:
 #
-config :logger, level: :debug, backends: [:console]
+config :logger, level: :debug, backends: [:console], format: "$time $metadata[$level] $levelpad$message", sync_threshold: 0
 #
 
 # It is also possible to import configuration files, relative to this

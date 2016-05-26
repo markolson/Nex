@@ -15,7 +15,7 @@ defmodule Nex.Mappers.Mapper_0 do
     # TODO: CPU will say ... what? Does this need the 8000 offset?
     # The 0x8000 is only for the ROM... Hm.
     mapped_address = translate(address) - 0x8000 
-    Logger.debug "[Mapper0]\t[Reading #{words}]\t#{mapped_address} | #{Hexate.encode(mapped_address, 4)}"
+    Logger.debug "[Mapper0]\t#{words}@#{Hexate.encode(mapped_address, 4)}"
     Enum.slice(rom, mapped_address, words)
   end
 
@@ -23,7 +23,7 @@ defmodule Nex.Mappers.Mapper_0 do
   # TODO: _Don't_ convert NROM-256. How to tell? Header flag?
   def translate(address) when address >= 0xC000 do
     new_address = (address ^^^ 0b0100_0000_0000_0000) # subtract 4 to shift the mirroring to the 'real' loc
-    Logger.debug "[Mapper0]\t[Translate]\t#{Hexate.encode(address,4)}->#{Hexate.encode(new_address,4)}"
+    Logger.debug "[Mapper0]\t#{Hexate.encode(address,4)}->#{Hexate.encode(new_address,4)}"
     new_address |> translate
   end
 
