@@ -16,7 +16,6 @@ defmodule Nex.Opcodes.O162 do
 
   @cycles 2
   def run(cpu) do
-    use Bitwise
     {cpu, [value]} = Nex.CPU.read_from_pc(cpu, 1)
     Logger.debug "[Opcode]\t#{format(value)}"
     {Nex.CPU.update_x(cpu, value), @cycles}

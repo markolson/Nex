@@ -8,6 +8,7 @@ defmodule Nex.CPU do
                 stack_pointer: 0xFD,
                 status: nil # should be 24 but ugh
             },
+            internal_ram: List.duplicate(255, 0x0800),
             cartridge: nil
 
   def boot(cartridge_path) do
@@ -43,6 +44,14 @@ defmodule Nex.CPU do
     new_registers = %Nex.CPU.Registers{cpu.registers | x: value}
     Logger.debug "[CPU]\tX: #{value}"
     %Nex.CPU{cpu | registers: new_registers}
+  end
+
+  # $0800-$0FFF $0800 Mirrors of $0000-$07FF
+  # $1000-$17FF $0800 Mirrors of $0000-$07FF
+  # $1800-$1FFF $0800nMirrors of $0000-$07FF
+  def store(cpu, address, value) do
+    Logger.debug "[CPU]\tRAM: $#{hpc(address)} = #{hpc(value)}"
+    %Nex.CPU{cpu | internal_ram: List.replace_at(cpu.internal_ram, address, value)}
   end
 
   def hpc(%Nex.CPU{}=cpu), do: hpc(cpu.registers.program_counter)
