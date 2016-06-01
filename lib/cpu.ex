@@ -9,6 +9,7 @@ defmodule Nex.CPU do
                 status: nil # should be 24 but ugh
             },
             internal_ram: List.duplicate(255, 0x0800),
+            stack: List.duplicate(0, 0xFF),
             cartridge: nil
 
   def boot(cartridge_path) do
@@ -52,6 +53,13 @@ defmodule Nex.CPU do
   def store(cpu, address, value) do
     Logger.debug "[CPU]\tRAM: $#{hpc(address)} = #{hpc(value)}"
     %Nex.CPU{cpu | internal_ram: List.replace_at(cpu.internal_ram, address, value)}
+  end
+
+  def push_stack_value(cpu, value) do
+    IO.inspect "[CPU] Pushing #{value} to #{hpc(cpu.registers.stack_pointer)}"
+    cpu = %Nex.CPU{cpu | stack: List.replace_at(cpu.stack, cpu.registers.stack_pointer, value)}
+    new_registers = %Nex.CPU.Registers{cpu.registers | stack_pointer: cpu.registers.stack_pointer - 1}
+    %Nex.CPU{cpu | registers: new_registers}
   end
 
   def hpc(%Nex.CPU{}=cpu), do: hpc(cpu.registers.program_counter)
