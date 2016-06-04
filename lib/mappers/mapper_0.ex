@@ -12,9 +12,8 @@ defmodule Nex.Mappers.Mapper_0 do
   use Bitwise
   require Logger
   def read(rom, address, words \\ 1) do
-    # TODO: CPU will say ... what? Does this need the 8000 offset?
-    # The 0x8000 is only for the ROM... Hm.
-    mapped_address = translate(address) - 0x8000 
+    raw_address = translate(address)
+    mapped_address = if raw_address >= 0x8000, do: raw_address - 0x8000, else: raw_address
     Logger.debug "[Mapper0]\t#{words}@#{Hexate.encode(mapped_address, 4)}"
     Enum.slice(rom, mapped_address, words)
   end
