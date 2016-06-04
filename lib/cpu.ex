@@ -6,7 +6,7 @@ defmodule Nex.CPU do
   defstruct registers: %Nex.CPU.Registers{
                 program_counter: 0x8000,
                 stack_pointer: 0xFD,
-                status: nil # should be 24 but ugh
+                status: %Nex.CPU.StatusRegister{}
             },
             internal_ram: List.duplicate(255, 0x0800),
             stack: List.duplicate(0, 0xFF),
@@ -44,6 +44,11 @@ defmodule Nex.CPU do
     #TODO: something like new_status = set_status_flags(cpu.registers.status, value) ?
     new_registers = %Nex.CPU.Registers{cpu.registers | x: value}
     Logger.debug "[CPU]\tX: #{value}"
+    %Nex.CPU{cpu | registers: new_registers}
+  end
+
+  def update_status_reg(cpu, status_register) do
+    new_registers = %{cpu.registers | status: status_register}
     %Nex.CPU{cpu | registers: new_registers}
   end
 

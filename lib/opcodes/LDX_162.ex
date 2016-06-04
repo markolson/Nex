@@ -16,8 +16,14 @@ defmodule Nex.Opcodes.O162 do
 
   @cycles 2
   def run(cpu) do
+    alias Nex.CPU.StatusRegister
     {cpu, [value]} = Nex.CPU.read_from_pc(cpu, 1)
     Logger.debug "[Opcode]\t#{format(value)}"
+    new_registers = cpu.registers.status
+      |> StatusRegister.set_negative(value)
+      |> StatusRegister.set_zero(value)
+    cpu = Nex.CPU.update_status_reg(cpu, new_registers)
+
     {Nex.CPU.update_x(cpu, value), @cycles}
   end
 
