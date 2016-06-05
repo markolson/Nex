@@ -18,8 +18,8 @@ defmodule Nex.Opcodes.O176 do
 
   @cycles 2
   def run(cpu) do
-    {cpu, [relative_address]} = Nex.CPU.read_from_pc(cpu, 1)
-    absolute_jmp_address = cpu.registers.program_counter + relative_address
+    {cpu, [jmp]} = Nex.CPU.read_from_pc(cpu, 1)
+    absolute_jmp_address = cpu.registers.program_counter + Nex.Util.relative_value(jmp)
     Logger.info "[Opcode]\t#{format(absolute_jmp_address)}"
     next_addr = if cpu.registers.status.carry_flag == 1, do: absolute_jmp_address, else: cpu.registers.program_counter
     cycles = @cycles + (1 || 2) # TODO: Figure this out. Going to need a helper for pages.
