@@ -50,10 +50,9 @@ defmodule Nex.CPU do
     %Nex.CPU{cpu | registers: new_registers} 
   end
 
-  def update_x(cpu, value) do
-    #TODO: something like new_status = set_status_flags(cpu.registers.status, value) ?
-    new_registers = %Nex.CPU.Registers{cpu.registers | x: value}
-    Logger.debug "[CPU]\tX: #{value}"
+  def update_reg(cpu, reg, value) do
+    new_registers = Map.put(cpu.registers, reg, value)
+    Logger.debug "[CPU]\t#{reg}: #{value}"
     %Nex.CPU{cpu | registers: new_registers}
   end
 
