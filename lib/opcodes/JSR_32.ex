@@ -20,12 +20,13 @@ defmodule Nex.Opcodes.O32 do
     {cpu, [low, high]} = Nex.CPU.read_from_pc(cpu, 2)
     return_address = cpu.registers.program_counter
     absolute_jmp_address = (high <<< 8) ||| low
-    Logger.info "[Opcode]\t#{format(absolute_jmp_address)} SP=#{cpu.registers.stack_pointer}"
     cpu = Nex.CPU.push_stack_value(cpu, return_address)
-    {Nex.CPU.update_pc(cpu, absolute_jmp_address), @cycles}
+
+    op_log = %{bytes: [low, high], log: format(absolute_jmp_address)}
+    {Nex.CPU.update_pc(cpu, absolute_jmp_address), @cycles, op_log}
   end
 
   def format(ops) do
-    "JSR $#{String.upcase(Hexate.encode(ops))}"
+    "JSR $#{String.upcase(Hexate.encode(ops, 2))}"
   end
 end

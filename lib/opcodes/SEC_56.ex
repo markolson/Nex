@@ -15,10 +15,12 @@ defmodule Nex.Opcodes.O56 do
 
   @cycles 2
   def run(cpu) do
-    Logger.info "[Opcode]\t#{format()}"
      new_registers = cpu.registers.status
       |> Nex.CPU.StatusRegister.set_carry(true)
-    {Nex.CPU.update_status_reg(cpu, new_registers), @cycles}
+
+      op_log = %{bytes: [], log: "SEC"}
+
+    {Nex.CPU.update_status_reg(cpu, new_registers), @cycles, op_log}
   end
 
   def format(ops \\ []) do

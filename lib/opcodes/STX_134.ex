@@ -18,11 +18,12 @@ defmodule Nex.Opcodes.O134 do
   def run(cpu) do
     {cpu, [address]} = Nex.CPU.read_from_pc(cpu, 1)
     value = cpu.registers.x
-    Logger.info "[Opcode]\t#{format(address)} (#{address})"
-    {Nex.CPU.store(cpu, address, value), @cycles}
+
+    op_log = %{bytes: [address], log: format(address)}
+    {Nex.CPU.store(cpu, address, value), @cycles, op_log}
   end
 
   def format(ops) do
-    "STX $#{String.upcase(Hexate.encode(ops))}"
+    "STX $#{String.upcase(Hexate.encode(ops, 2))}"
   end
 end

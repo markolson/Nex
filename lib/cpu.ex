@@ -24,9 +24,14 @@ defmodule Nex.CPU do
   end
 
   def run_instruction(cpu) do
+    pc_for_logger = cpu.registers.program_counter
+
     {cpu, [opcode]} = read_from_pc(cpu, 1)
     runner = Module.safe_concat(Nex.Opcodes, "O#{opcode}")
-    {cpu, cycles} = runner.run(cpu)
+    {cpu, cycles, op_log} = runner.run(cpu)
+    op_log = Map.put(op_log, :start_op, pc_for_logger)
+    Nex.Util.log(cpu, %{op_log | bytes: [opcode | op_log.bytes] })
+    {cpu, cycles}
   end
 
   def read_from_pc(cpu, size) do
@@ -66,7 +71,6 @@ defmodule Nex.CPU do
   end
 
   def push_stack_value(cpu, value) do
-    IO.inspect "[CPU] Pushing #{Nex.CPU.hpc(value)} to #{hpc(cpu.registers.stack_pointer)}"
     cpu = %Nex.CPU{cpu | stack: List.replace_at(cpu.stack, cpu.registers.stack_pointer, value)}
     new_registers = %Nex.CPU.Registers{cpu.registers | stack_pointer: cpu.registers.stack_pointer - 1}
     %Nex.CPU{cpu | registers: new_registers}

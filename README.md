@@ -31,5 +31,8 @@ t = Nex.CPU.boot("test/roms/nestest/nestest.nes")
 {t6, _} = Nex.CPU.run_instruction(t5) # STX
 {t7, _} = Nex.CPU.run_instruction(t6) # JSR
 
+cpu = Nex.CPU.boot('test/roms/nestest/nestest.nes')
+Nex.CPU.flock(cpu)
+
 ```
 
