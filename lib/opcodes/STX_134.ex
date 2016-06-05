@@ -18,7 +18,7 @@ defmodule Nex.Opcodes.O134 do
   def run(cpu) do
     {cpu, [address]} = Nex.CPU.read_from_pc(cpu, 1)
     value = cpu.registers.x
-    Logger.debug "[Opcode]\t#{format(address)} (#{address})"
+    Logger.info "[Opcode]\t#{format(address)} (#{address})"
     {Nex.CPU.store(cpu, address, value), @cycles}
   end
 

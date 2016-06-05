@@ -7,7 +7,8 @@ All technology is pointless.
 ## Short-term TODO list
 
 * Turn CPU into a Genserver
-* Initialize CPU registers
+* Macro the hell out of opcodes
+* Get something nicer around setting flags/registers
 
 
 ## Notes

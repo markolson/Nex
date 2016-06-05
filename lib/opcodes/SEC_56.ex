@@ -1,4 +1,4 @@
-defmodule Nex.Opcodes.O38 do
+defmodule Nex.Opcodes.O56 do
   require Logger
   @moduledoc """
   SEC                        SEC Set carry flag                         SEC
@@ -15,8 +15,10 @@ defmodule Nex.Opcodes.O38 do
 
   @cycles 2
   def run(cpu) do
-    Logger.debug "[Opcode]\t#{format()}"
-    # TODO: Do the thing
+    Logger.info "[Opcode]\t#{format()}"
+     new_registers = cpu.registers.status
+      |> Nex.CPU.StatusRegister.set_carry(true)
+    {Nex.CPU.update_status_reg(cpu, new_registers), @cycles}
   end
 
   def format(ops \\ []) do

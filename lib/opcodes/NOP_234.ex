@@ -15,7 +15,7 @@ defmodule Nex.Opcodes.O234 do
 
   @cycles 2
   def run(cpu) do
-    Logger.debug "[Opcode]\t#{format()}"
+    Logger.info "[Opcode]\t#{format()}"
     {cpu, @cycles}
   end
 

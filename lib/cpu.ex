@@ -18,6 +18,11 @@ defmodule Nex.CPU do
     %Nex.CPU{cartridge: cart}
   end
 
+  def flock(cpu) do
+    {new_state, halt_for} = cpu |> run_instruction
+    flock(new_state)
+  end
+
   def run_instruction(cpu) do
     {cpu, [opcode]} = read_from_pc(cpu, 1)
     runner = Module.safe_concat(Nex.Opcodes, "O#{opcode}")
@@ -61,7 +66,7 @@ defmodule Nex.CPU do
   end
 
   def push_stack_value(cpu, value) do
-    IO.inspect "[CPU] Pushing #{value} to #{hpc(cpu.registers.stack_pointer)}"
+    IO.inspect "[CPU] Pushing #{Nex.CPU.hpc(value)} to #{hpc(cpu.registers.stack_pointer)}"
     cpu = %Nex.CPU{cpu | stack: List.replace_at(cpu.stack, cpu.registers.stack_pointer, value)}
     new_registers = %Nex.CPU.Registers{cpu.registers | stack_pointer: cpu.registers.stack_pointer - 1}
     %Nex.CPU{cpu | registers: new_registers}

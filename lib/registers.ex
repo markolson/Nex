@@ -64,6 +64,10 @@ defmodule Nex.CPU.StatusRegister do
     %Nex.CPU.StatusRegister{ register | overflow_flag: (value > 0xFF && 1) || 0 }
   end
 
+  def set_carry(register, value) do
+    %Nex.CPU.StatusRegister{ register | carry_flag: (value == true && 1) || 0 }
+  end
+
   def set_negative(register, value) do
     use Bitwise
     %Nex.CPU.StatusRegister{ register | negative_result: ((value &&& 0b1000_0000 ) > 0 && 1) || 0 }
