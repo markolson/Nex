@@ -7,7 +7,7 @@ defmodule Nex.Util do
       <> Nex.CPU.hpc(op_log.start_op)
       <> "  " <> bytes_to_hex(op_log.bytes)
       <> String.ljust(op_log.log, 32)
-      <> "A:" <> byte_to_hex(cpu.registers.acculator) <> " "
+      <> "A:" <> byte_to_hex(cpu.registers.a) <> " "
       <> "X:" <> byte_to_hex(cpu.registers.x) <> " "
       <> "Y:" <> byte_to_hex(cpu.registers.x) <> " "
       <> "P:" <> Nex.CPU.StatusRegister.to_hex(cpu.registers.status) <> " "

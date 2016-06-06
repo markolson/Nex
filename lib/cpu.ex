@@ -8,7 +8,7 @@ defmodule Nex.CPU do
                 stack_pointer: 0xFD,
                 status: %Nex.CPU.StatusRegister{}
             },
-            internal_ram: List.duplicate(255, 0x0800),
+            internal_ram: List.duplicate(0x00, 0x0800),
             stack: List.duplicate(0, 0xFF),
             cartridge: nil
 
@@ -28,7 +28,10 @@ defmodule Nex.CPU do
 
     {cpu, [opcode]} = read_from_pc(cpu, 1)
     runner = Module.safe_concat(Nex.Opcodes, "O#{opcode}")
-    {cpu, cycles, op_log} = runner.run(cpu)
+    {cpu, cycles, op_log} =  runner.run(cpu)
+   # rescue
+   #   _ -> raise "Failed on Op #{Hexate.encode(opcode)} (make lib/opcodes/XXX_#{opcode}.ex) at #{hpc(pc_for_logger)}"
+   # end
     op_log = Map.put(op_log, :start_op, pc_for_logger)
     Nex.Util.log(cpu, %{op_log | bytes: [opcode | op_log.bytes] })
     {cpu, cycles}
@@ -52,7 +55,7 @@ defmodule Nex.CPU do
 
   def update_reg(cpu, reg, value) do
     new_registers = Map.put(cpu.registers, reg, value)
-    Logger.debug "[CPU]\t#{reg}: #{value}"
+    Logger.debug "[CPU]\tSetting #{reg}: #{value}"
     %Nex.CPU{cpu | registers: new_registers}
   end
 
@@ -67,6 +70,10 @@ defmodule Nex.CPU do
   def store(cpu, address, value) do
     Logger.debug "[CPU]\tRAM: $#{hpc(address)} = #{hpc(value)}"
     %Nex.CPU{cpu | internal_ram: List.replace_at(cpu.internal_ram, address, value)}
+  end
+
+  def retrieve(cpu, address) do
+    Enum.at(cpu.internal_ram, address)
   end
 
   def push_stack_value(cpu, value) do

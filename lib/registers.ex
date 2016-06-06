@@ -79,7 +79,7 @@ defmodule Nex.CPU.StatusRegister do
 end
 
 defmodule Nex.CPU.Registers do
-  defstruct   acculator:              0,  # A, byte-wide
+  defstruct   a:                      0,  # A, byte-wide
               x:                      0,  # X, byte-wide
               y:                      0,  # Y, byte-wide
               status:                 nil, # P, byte-wide
