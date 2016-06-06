@@ -1,5 +1,4 @@
 defmodule Nex.Opcodes.O162 do
-  require Logger
   @moduledoc """
 
   LDX                   LDX Load index X with memory                    LDX

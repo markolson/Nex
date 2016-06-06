@@ -1,5 +1,4 @@
 defmodule Nex.Opcodes.O169 do
-  require Logger
   @moduledoc """
   LDA                  LDA Load accumulator with memory                 LDA
 

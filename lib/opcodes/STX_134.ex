@@ -1,5 +1,4 @@
 defmodule Nex.Opcodes.O134 do
-  require Logger
   @moduledoc """
 
   STX                    STX Store index X in memory                    STX

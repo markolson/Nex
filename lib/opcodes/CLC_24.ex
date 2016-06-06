@@ -1,5 +1,4 @@
 defmodule Nex.Opcodes.O24 do
-  require Logger
   @moduledoc """
   CLC                       CLC Clear carry flag                        CLC
 

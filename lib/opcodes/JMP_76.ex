@@ -1,5 +1,4 @@
 defmodule Nex.Opcodes.O76 do
-  require Logger
   @moduledoc """
 
   JMP                     JMP Jump to new location                      JMP

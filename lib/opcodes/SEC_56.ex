@@ -1,5 +1,4 @@
 defmodule Nex.Opcodes.O56 do
-  require Logger
   @moduledoc """
   SEC                        SEC Set carry flag                         SEC
 

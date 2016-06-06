@@ -15,7 +15,7 @@ defmodule Nex.Opcodes.O144 do
 
   @cycles 2
   def run(cpu) do
-    Nex.Opcodes.ConditionalJump.relative(cpu, @cycles, cpu.registers.status.carry_flag, 0, &Nex.Opcodes.O144.format/1)
+    Nex.Opcodes.ConditionalJump.relative(cpu, @cycles, cpu.registers.status.carry_flag, 0, &format/1)
   end
 
   def format(ops) do

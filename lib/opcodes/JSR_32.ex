@@ -1,5 +1,4 @@
 defmodule Nex.Opcodes.O32 do
-  require Logger
   @moduledoc """
 
   JSR          JSR Jump to new location saving return address           JSR

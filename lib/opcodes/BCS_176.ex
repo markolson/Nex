@@ -1,5 +1,4 @@
 defmodule Nex.Opcodes.O176 do
-  require Logger
   @moduledoc """
   BCS                      BCS Branch on carry set                      BCS
 
@@ -17,13 +16,7 @@ defmodule Nex.Opcodes.O176 do
 
   @cycles 2
   def run(cpu) do
-    {cpu, [jmp]} = Nex.CPU.read_from_pc(cpu, 1)
-    absolute_jmp_address = cpu.registers.program_counter + Nex.Util.relative_value(jmp)
-    next_addr = if cpu.registers.status.carry_flag == 1, do: absolute_jmp_address, else: cpu.registers.program_counter
-    cycles = @cycles + (1 || 2) # TODO: Figure this out. Going to need a helper for pages.
-
-    op_log = %{bytes: [jmp], log: format(absolute_jmp_address)}
-    {Nex.CPU.update_pc(cpu, next_addr), @cycles, op_log}
+    Nex.Opcodes.ConditionalJump.relative(cpu, @cycles, cpu.registers.status.carry_flag, 1, &format/1)
   end
 
   def format(ops) do

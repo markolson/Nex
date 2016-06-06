@@ -1,5 +1,4 @@
 defmodule Nex.Opcodes.O234 do
-  require Logger
   @moduledoc """
 
   NOP                         NOP No operation                          NOP
