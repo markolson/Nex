@@ -24,7 +24,7 @@ defmodule Nex.CPU do
   end
 
   def run_instruction(cpu) do
-    pc_for_logger = cpu.registers.program_counter
+    cpu_for_logger = cpu
 
     {cpu, [opcode]} = read_from_pc(cpu, 1)
     runner = Module.safe_concat(Nex.Opcodes, "O#{opcode}")
@@ -32,8 +32,8 @@ defmodule Nex.CPU do
    # rescue
    #   _ -> raise "Failed on Op #{Hexate.encode(opcode)} (make lib/opcodes/XXX_#{opcode}.ex) at #{hpc(pc_for_logger)}"
    # end
-    op_log = Map.put(op_log, :start_op, pc_for_logger)
-    Nex.Util.log(cpu, %{op_log | bytes: [opcode | op_log.bytes] })
+    op_log = Map.put(op_log, :start_op, cpu_for_logger.registers.program_counter)
+    Nex.Util.log(cpu_for_logger, %{op_log | bytes: [opcode | op_log.bytes] })
     {cpu, cycles}
   end
 
