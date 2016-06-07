@@ -86,6 +86,22 @@ defmodule Nex.CPU do
     %Nex.CPU{cpu | registers: new_registers}
   end
 
+  def pop_stack_value(cpu) do
+    new_registers = %Nex.CPU.Registers{cpu.registers | stack_pointer: cpu.registers.stack_pointer + 1}
+    cpu = %Nex.CPU{cpu | registers: new_registers}
+    value = Enum.at(cpu.stack, cpu.registers.stack_pointer)
+    {cpu, value}
+  end
+
+  def pop_stack_values(cpu, left \\ 1), do: pop_stack_values(cpu, left, [])
+  def pop_stack_values(cpu, 0, result), do: {cpu, result}
+  def pop_stack_values(cpu, left, result) do
+    {cpu, value} = pop_stack_value(cpu)
+    pop_stack_values(cpu, left-1, [value|result])
+  end
+
+
+
   def hpc(%Nex.CPU{}=cpu), do: hpc(cpu.registers.program_counter)
   def hpc(x), do: Hexate.encode(x, 4) |> String.upcase
 end

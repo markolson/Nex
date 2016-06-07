@@ -16,7 +16,7 @@ defmodule Nex.Opcodes.O32 do
   @cycles 6
   def run(cpu) do
     use Bitwise
-    <<pc_high::size(8),pc_low::size(8)>> = <<cpu.registers.program_counter-1::size(16)>>
+    <<pc_high::size(8),pc_low::size(8)>> = <<cpu.registers.program_counter+2::size(16)>>
     {cpu, [low, high]} = Nex.CPU.read_from_pc(cpu, 2)
     absolute_jmp_address = (high <<< 8) ||| low
 

@@ -11,7 +11,7 @@ defmodule Nex.Opcodes.O32Test do
     assert cpu.registers.program_counter == 0x0007
     # bit shifting is boooooooring
     pop_back = Enum.slice(cpu.stack, cpu.registers.stack_pointer + 1, 2) |> Enum.reverse |> Hexate.encode
-    assert pop_back == "8000"
+    assert pop_back == "8003"
 
     {cpu, _} = Nex.CPU.run_instruction(cpu)
     assert cpu.registers.status.carry_flag == 1
