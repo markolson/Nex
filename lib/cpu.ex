@@ -12,6 +12,10 @@ defmodule Nex.CPU do
             stack: List.duplicate(0, 0xFF),
             cartridge: nil
 
+  def t do
+    boot('test/roms/nestest/nestest.nes') |> flock
+  end
+
   def boot(cartridge_path) do
     cart = Nex.Cartridge.load(cartridge_path)
     Logger.debug "[CPU]\tBooted"
