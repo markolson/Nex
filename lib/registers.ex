@@ -19,12 +19,12 @@ defmodule Nex.CPU.StatusRegister do
               # or D6 from last BIT
               overflow_flag:          0,  # V, bit 6
               # Negative: Set to bit 7 of the last operation
-              negative_result:        0   # S, bit 7
+              sign_flag:        0   # S, bit 7
 
   def to_byte(register) do
     use Bitwise
     <<b::integer>> = <<
-      register.negative_result::size(1),
+      register.sign_flag::size(1),
       register.overflow_flag::size(1),
       1::size(1),
       register.brk_executed::size(1),
@@ -50,7 +50,7 @@ defmodule Nex.CPU.StatusRegister do
       c::size(1),
     >> = <<byte::integer>>
     %Nex.CPU.StatusRegister{
-      negative_result: n,
+      sign_flag: n,
       overflow_flag: o,
       brk_executed: b,
       decimal_mode: d,
@@ -61,7 +61,7 @@ defmodule Nex.CPU.StatusRegister do
   end
 
   def set_overflow(register, value) do
-    %Nex.CPU.StatusRegister{ register | overflow_flag: (value > 0xFF && 1) || 0 }
+    %Nex.CPU.StatusRegister{ register | overflow_flag: (value > 0 && 1) || 0 }
   end
 
   def set_carry(register, value) do
@@ -70,7 +70,7 @@ defmodule Nex.CPU.StatusRegister do
 
   def set_negative(register, value) do
     use Bitwise
-    %Nex.CPU.StatusRegister{ register | negative_result: ((value &&& 0b1000_0000 ) > 0 && 1) || 0 }
+    %Nex.CPU.StatusRegister{ register | sign_flag: ((value &&& 0b1000_0000 ) > 0 && 1) || 0 }
   end
 
   def set_zero(register, value) do
