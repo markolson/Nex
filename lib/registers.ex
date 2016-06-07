@@ -76,6 +76,14 @@ defmodule Nex.CPU.StatusRegister do
   def set_zero(register, value) do
     %Nex.CPU.StatusRegister{ register | zero_result: (value == 0 && 1) || 0 }
   end
+
+  def set_interrupt_disabled(register, value) do
+    %Nex.CPU.StatusRegister{ register | interrupts_inhibit: (value == true && 1) || 0 }
+  end
+
+  def set_decimal_mode(register, value) do
+    %Nex.CPU.StatusRegister{ register | decimal_mode: (value == true && 1) || 0 }
+  end
 end
 
 defmodule Nex.CPU.Registers do
