@@ -26,7 +26,7 @@ defmodule Nex.CPU.StatusRegister do
     <<b::integer>> = <<
       register.sign_flag::size(1),
       register.overflow_flag::size(1),
-      1::size(1),
+      register.unused::size(1),
       register.brk_executed::size(1),
       register.decimal_mode::size(1),
       register.interrupts_inhibit::size(1),
@@ -38,11 +38,11 @@ defmodule Nex.CPU.StatusRegister do
 
   def to_hex(register), do: Nex.CPU.StatusRegister.to_byte(register) |> Hexate.encode(2) |> String.upcase
 
-  def from_byte(byte) do
+  def from_byte(r, byte) do
     <<
       n::size(1),
       o::size(1),
-      1::size(1),
+      u::size(1),
       b::size(1),
       d::size(1),
       i::size(1),
@@ -52,7 +52,8 @@ defmodule Nex.CPU.StatusRegister do
     %Nex.CPU.StatusRegister{
       sign_flag: n,
       overflow_flag: o,
-      brk_executed: b,
+      unused: r.unused,
+      brk_executed: r.brk_executed,
       decimal_mode: d,
       interrupts_inhibit: i,
       zero_result: z,

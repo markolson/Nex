@@ -59,7 +59,7 @@ defmodule Nex.CPU do
 
   def update_reg(cpu, reg, value) when is_integer(value) do
     new_registers = Map.put(cpu.registers, reg, value)
-    Logger.info "[CPU]\tSetting #{reg}: #{value}"
+    Logger.debug "[CPU]\tSetting #{reg}: #{value}"
     %Nex.CPU{cpu | registers: new_registers}
   end
 
