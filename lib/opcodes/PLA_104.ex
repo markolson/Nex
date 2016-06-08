@@ -14,8 +14,12 @@ defmodule Nex.Opcodes.O104 do
 
   @cycles 4
   def run(cpu) do
+    alias Nex.CPU.StatusRegister
     {cpu, value} = Nex.CPU.pop_stack_value(cpu)
-
+    new_registers = cpu.registers.status
+      |> StatusRegister.set_negative(value)
+      |> StatusRegister.set_zero(value)
+    cpu = Nex.CPU.update_status_reg(cpu, new_registers)
     op_log = %{bytes: [], log: "PLA"}
     {Nex.CPU.update_reg(cpu, :a, value), @cycles, op_log}
   end

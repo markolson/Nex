@@ -57,9 +57,9 @@ defmodule Nex.CPU do
     %Nex.CPU{cpu | registers: new_registers} 
   end
 
-  def update_reg(cpu, reg, value) do
+  def update_reg(cpu, reg, value) when is_integer(value) do
     new_registers = Map.put(cpu.registers, reg, value)
-    Logger.debug "[CPU]\tSetting #{reg}: #{value}"
+    Logger.info "[CPU]\tSetting #{reg}: #{value}"
     %Nex.CPU{cpu | registers: new_registers}
   end
 
@@ -71,16 +71,16 @@ defmodule Nex.CPU do
   # $0800-$0FFF $0800 Mirrors of $0000-$07FF
   # $1000-$17FF $0800 Mirrors of $0000-$07FF
   # $1800-$1FFF $0800nMirrors of $0000-$07FF
-  def store(cpu, address, value) do
+  def store(cpu, address, value) when is_integer(value) do
     Logger.debug "[CPU]\tRAM: $#{hpc(address)} = #{hpc(value)}"
     %Nex.CPU{cpu | internal_ram: List.replace_at(cpu.internal_ram, address, value)}
   end
 
-  def retrieve(cpu, address) do
+  def retrieve(cpu, address) when is_integer(address) do
     Enum.at(cpu.internal_ram, address)
   end
 
-  def push_stack_value(cpu, value) do
+  def push_stack_value(cpu, value) when is_integer(value) do
     cpu = %Nex.CPU{cpu | stack: List.replace_at(cpu.stack, cpu.registers.stack_pointer, value)}
     new_registers = %Nex.CPU.Registers{cpu.registers | stack_pointer: cpu.registers.stack_pointer - 1}
     %Nex.CPU{cpu | registers: new_registers}
