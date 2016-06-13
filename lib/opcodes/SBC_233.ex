@@ -32,26 +32,25 @@ defmodule Nex.Opcodes.O233 do
     ac = cpu.registers.a
     temp = ac - value - (if cpu.registers.status.carry_flag == 1, do: 0, else: 1)
 
-    IO.inspect "temp is #{temp}"
     ac_mask = bor(ac, value) &&& 0x80
     tm_mask = bor(ac, temp) &&& 0x80
-    overflowed = (ac_mask != 128 && tm_mask == 128)
-    
+    overflowed = (ac_mask == 128 && tm_mask == 128)
+
     new_registers = cpu.registers.status 
       |> StatusRegister.set_zero(temp) 
       |> StatusRegister.set_negative(temp)
       |> StatusRegister.set_overflow(overflowed)
 
     temp = if cpu.registers.status.decimal_mode == 1 do
-      temp = if ( (ac &&& 0xF) - cpu.registers.status.carry_flag < (value &&& 0xF) ), do: temp - 6, else: temp
+      temp = if ( (ac &&& 0xF) - (if cpu.registers.status.carry_flag == 1, do: 0, else: 1) < (value &&& 0xF) ), do: temp - 6, else: temp
       temp = if (temp > 0x99), do: temp - 0x60, else: temp
       temp
     else
       temp
     end
-    cpu = Nex.CPU.update_status_reg(cpu, new_registers)
     new_registers = new_registers |> StatusRegister.set_carry(temp >= 0)
-
+    cpu = Nex.CPU.update_status_reg(cpu, new_registers)
+    
     op_log = %{bytes: [value], log: format(value)}
     <<end_value::size(8),_::binary>> = <<temp>>
     {Nex.CPU.update_reg(cpu, :a, end_value), @cycles, op_log}
