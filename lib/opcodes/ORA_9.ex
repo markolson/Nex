@@ -1,16 +1,16 @@
-defmodule Nex.Opcodes.O41 do
+defmodule Nex.Opcodes.O9 do
   @moduledoc """
-  AND                  "AND" memory with accumulator                    AND
+  ORA                 ORA "OR" memory with accumulator                  ORA
 
-  Operation:  A /\ M -> A                               N Z C I D V
+  Operation: A V M -> A                                 N Z C I D V
                                                         / / _ _ _ _
-                               (Ref: 2.2.3.0)
+                               (Ref: 2.2.3.1)
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
   +----------------+-----------------------+---------+---------+----------+
-  |  Immediate     |   AND #Oper           |    29   |    2    |    2     |
+  |  Immediate     |   ORA #Oper           |    09   |    2    |    2     |
   +----------------+-----------------------+---------+---------+----------+
-  * Add 1 if page boundary is crossed.
+  * Add 1 on page crossing
   """
 
   @cycles 3
@@ -23,7 +23,7 @@ defmodule Nex.Opcodes.O41 do
       |> StatusRegister.set_zero(value)
     cpu = Nex.CPU.update_status_reg(cpu, new_registers)
     op_log = %{bytes: [value], log: format(value)}
-    {Nex.CPU.update_reg(cpu, :a, (value &&& cpu.registers.a)), @cycles, op_log}
+    {Nex.CPU.update_reg(cpu, :a, (value ||| cpu.registers.a)), @cycles, op_log}
   end
   def format(ops) do
     "AND #$#{String.upcase(Hexate.encode(ops, 2))}"
