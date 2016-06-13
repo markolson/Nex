@@ -3,8 +3,7 @@ defmodule Nex.Util do
   def log(cpu, op_log) do
     require Logger
     Logger.info(
-      "$"
-      <> Nex.CPU.hpc(op_log.start_op)
+      Nex.CPU.hpc(op_log.start_op)
       <> "  " <> bytes_to_hex(op_log.bytes)
       <> String.ljust(op_log.log, 32)
       <> "A:" <> byte_to_hex(cpu.registers.a) <> " "

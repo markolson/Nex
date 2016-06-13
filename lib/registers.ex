@@ -61,6 +61,10 @@ defmodule Nex.CPU.StatusRegister do
     }
   end
 
+  def set_overflow(register, value) when is_boolean(value) do
+     %Nex.CPU.StatusRegister{ register | overflow_flag: (value && 1)|| 0 }
+  end
+
   def set_overflow(register, value) do
     %Nex.CPU.StatusRegister{ register | overflow_flag: (value > 0 && 1) || 0 }
   end
