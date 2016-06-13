@@ -8,7 +8,7 @@ defmodule Nex.Util do
       <> String.ljust(op_log.log, 32)
       <> "A:" <> byte_to_hex(cpu.registers.a) <> " "
       <> "X:" <> byte_to_hex(cpu.registers.x) <> " "
-      <> "Y:" <> byte_to_hex(cpu.registers.x) <> " "
+      <> "Y:" <> byte_to_hex(cpu.registers.y) <> " "
       <> "P:" <> Nex.CPU.StatusRegister.to_hex(cpu.registers.status) <> " "
       <> "SP:" <> byte_to_hex(cpu.registers.stack_pointer) <> " "
       <> "CYC:" <> byte_to_hex(0x00) <> " "

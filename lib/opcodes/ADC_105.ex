@@ -25,15 +25,7 @@ defmodule Nex.Opcodes.O105 do
     ac_mask = bor(ac, value) &&& 0x80
     tm_mask = bor(ac, temp) &&& 0x80
     overflowed = (ac_mask != 128 && tm_mask == 128)
-    IO.inspect [ac, value, temp]
-    IO.inspect "acv #{((bor(ac, value)) &&& 0x80) }"
-    IO.inspect "act #{((bor(ac, temp)) &&& 0x80) }"
-
-    # goes wrong at C980
-
-    IO.inspect overflowed
-    IO.inspect temp
-
+    
     nr = cpu.registers.status |> StatusRegister.set_zero(temp)
 
     {new_registers, temp} = if cpu.registers.status.decimal_mode == 1 do
@@ -52,7 +44,6 @@ defmodule Nex.Opcodes.O105 do
       {nr, temp}
     end
     cpu = Nex.CPU.update_status_reg(cpu, new_registers)
-    IO.inspect cpu.registers.status
 
     op_log = %{bytes: [value], log: format(value)}
     <<end_value::size(8),_::binary>> = <<temp>>

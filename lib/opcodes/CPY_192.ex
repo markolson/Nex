@@ -1,14 +1,13 @@
-defmodule Nex.Opcodes.O201 do
+defmodule Nex.Opcodes.O192 do
   @moduledoc """
-  CMP                CMP Compare memory and accumulator                 CMP
-
-  Operation:  A - M                                     N Z C I D V
-                                                        / / / _ _ _
-                                (Ref: 4.2.1)
+  CPY                  CPY Compare memory and index Y                   CPY
+                                                        N Z C I D V
+  Operation:  Y - M                                     / / / _ _ _
+                                 (Ref: 7.9)
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
   +----------------+-----------------------+---------+---------+----------+
-  |  Immediate     |   CMP #Oper           |    C9   |    2    |    2     |
+  |  Immediate     |   CPY *Oper           |    C0   |    2    |    2     |
   +----------------+-----------------------+---------+---------+----------+
   """
 
@@ -16,7 +15,8 @@ defmodule Nex.Opcodes.O201 do
   def run(cpu) do
     alias Nex.CPU.StatusRegister
     {cpu, [value]} = Nex.CPU.read_from_pc(cpu, 1)
-    result = cpu.registers.a - value
+    result = cpu.registers.y - value
+
     new_registers = cpu.registers.status
       |> StatusRegister.set_negative(result)
       |> StatusRegister.set_zero(result)
@@ -28,6 +28,6 @@ defmodule Nex.Opcodes.O201 do
   end
 
   def format(ops) do
-    "CMP #$#{String.upcase(Hexate.encode(ops, 2))}"
+    "CPY #$#{String.upcase(Hexate.encode(ops, 2))}"
   end
 end

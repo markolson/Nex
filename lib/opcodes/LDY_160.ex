@@ -1,14 +1,13 @@
-defmodule Nex.Opcodes.O201 do
+defmodule Nex.Opcodes.O160 do
   @moduledoc """
-  CMP                CMP Compare memory and accumulator                 CMP
-
-  Operation:  A - M                                     N Z C I D V
-                                                        / / / _ _ _
-                                (Ref: 4.2.1)
+  LDY                   LDY Load index Y with memory                    LDY
+                                                        N Z C I D V
+  Operation:  M -> Y                                    / / _ _ _ _
+                                 (Ref: 7.1)
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
   +----------------+-----------------------+---------+---------+----------+
-  |  Immediate     |   CMP #Oper           |    C9   |    2    |    2     |
+  |  Immediate     |   LDY #Oper           |    A0   |    2    |    2     |
   +----------------+-----------------------+---------+---------+----------+
   """
 
@@ -16,18 +15,16 @@ defmodule Nex.Opcodes.O201 do
   def run(cpu) do
     alias Nex.CPU.StatusRegister
     {cpu, [value]} = Nex.CPU.read_from_pc(cpu, 1)
-    result = cpu.registers.a - value
     new_registers = cpu.registers.status
-      |> StatusRegister.set_negative(result)
-      |> StatusRegister.set_zero(result)
-      |> StatusRegister.set_carry(result >= 0)
+      |> StatusRegister.set_negative(value)
+      |> StatusRegister.set_zero(value)
     cpu = Nex.CPU.update_status_reg(cpu, new_registers)
 
     op_log = %{bytes: [value], log: format(value)}
-    {cpu, @cycles, op_log}
+    {Nex.CPU.update_reg(cpu, :y, value), @cycles, op_log}
   end
 
   def format(ops) do
-    "CMP #$#{String.upcase(Hexate.encode(ops, 2))}"
+    "LDY #$#{String.upcase(Hexate.encode(ops, 2))}"
   end
 end
