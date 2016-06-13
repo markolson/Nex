@@ -17,10 +17,15 @@ defmodule Nex.Opcodes.O201 do
     alias Nex.CPU.StatusRegister
     {cpu, [value]} = Nex.CPU.read_from_pc(cpu, 1)
     result = cpu.registers.a - value
+    #<<result::size(8),rest::binary>> = <<cpu.registers.a - value>>
+    IO.inspect [cpu.registers.a, value, result]
+
+    IO.inspect result
+    IO.inspect result < 0x100
     new_registers = cpu.registers.status
       |> StatusRegister.set_negative(result)
       |> StatusRegister.set_zero(result)
-      |> StatusRegister.set_carry(result < 0x100)
+      |> StatusRegister.set_carry(result >= 0)
     cpu = Nex.CPU.update_status_reg(cpu, new_registers)
 
     op_log = %{bytes: [value], log: format(value)}

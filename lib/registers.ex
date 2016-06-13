@@ -62,6 +62,7 @@ defmodule Nex.CPU.StatusRegister do
   end
 
   def set_overflow(register, value) when is_boolean(value) do
+    IO.inspect "Setting overflow = #{value}"
      %Nex.CPU.StatusRegister{ register | overflow_flag: (value && 1)|| 0 }
   end
 
@@ -70,6 +71,7 @@ defmodule Nex.CPU.StatusRegister do
   end
 
   def set_carry(register, value) do
+    IO.inspect "Setting carry = #{value}"
     %Nex.CPU.StatusRegister{ register | carry_flag: (value == true && 1) || 0 }
   end
 
@@ -79,6 +81,7 @@ defmodule Nex.CPU.StatusRegister do
   end
 
   def set_zero(register, value) do
+    <<value::size(8),_::binary>> = <<value>>
     %Nex.CPU.StatusRegister{ register | zero_result: (value == 0 && 1) || 0 }
   end
 
