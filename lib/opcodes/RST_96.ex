@@ -17,7 +17,7 @@ defmodule Nex.Opcodes.O96 do
     {cpu, [high,low]} = Nex.CPU.pop_stack_values(cpu, 2)
     address = (high <<< 8) + low
 
-    op_log = %{bytes: [high, low], log: format(address)}
+    op_log = %{bytes: [], log: format(address)}
     {Nex.CPU.update_pc(cpu, address), @cycles, op_log}
   end
 
