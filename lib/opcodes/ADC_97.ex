@@ -59,6 +59,6 @@ defmodule Nex.Opcodes.O97 do
 
   def format(offset, zero_page_address, mem_address, value) do
     #LDA ($80,X) @ 80 = 0200 = 5A
-    "EOR ($#{String.upcase(Hexate.encode(offset))},X) @ #{String.upcase(Hexate.encode(zero_page_address))} = #{String.upcase(Hexate.encode(mem_address, 4))} = #{String.upcase(Hexate.encode(value, 2))}"
+    "ADC ($#{String.upcase(Hexate.encode(offset))},X) @ #{String.upcase(Hexate.encode(zero_page_address))} = #{String.upcase(Hexate.encode(mem_address, 4))} = #{String.upcase(Hexate.encode(value, 2))}"
   end
 end
