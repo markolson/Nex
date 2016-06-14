@@ -26,6 +26,6 @@ defmodule Nex.Opcodes.O9 do
     {Nex.CPU.update_reg(cpu, :a, (value ||| cpu.registers.a)), @cycles, op_log}
   end
   def format(ops) do
-    "AND #$#{String.upcase(Hexate.encode(ops, 2))}"
+    "ORA #$#{String.upcase(Hexate.encode(ops, 2))}"
   end
 end

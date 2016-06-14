@@ -1,16 +1,15 @@
-defmodule Nex.Opcodes.O165 do
+defmodule Nex.Opcodes.O164 do
   @moduledoc """
-  LDA                  LDA Load accumulator with memory                 LDA
-
-  Operation:  M -> A                                    N Z C I D V
-                                                        / / _ _ _ _
-                                (Ref: 2.1.1)
+  LDY                   LDY Load index Y with memory                    LDY
+                                                        N Z C I D V
+  Operation:  M -> Y                                    / / _ _ _ _
+                                 (Ref: 7.1)
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
   +----------------+-----------------------+---------+---------+----------+
-  |  Zero Page     |   LDA Oper            |    A5   |    2    |    3     |
+  |  Zero Page     |   LDY Oper            |    A4   |    2    |    3     |
   +----------------+-----------------------+---------+---------+----------+
-  * Add 1 if page boundary is crossed.
+  * Add 1 when page boundary is crossed.
   """
 
   @cycles 3
@@ -25,10 +24,10 @@ defmodule Nex.Opcodes.O165 do
     cpu = Nex.CPU.update_status_reg(cpu, new_registers)
 
     op_log = %{bytes: [address], log: format(address, value)}
-    {Nex.CPU.update_reg(cpu, :a, value), @cycles, op_log}
+    {Nex.CPU.update_reg(cpu, :y, value), @cycles, op_log}
   end
 
   def format(address, value) do
-    "LDA $#{String.upcase(Hexate.encode(address, 2))} = #{String.upcase(Hexate.encode(value, 2))}"
+    "LDY $#{String.upcase(Hexate.encode(address, 4))} = #{String.upcase(Hexate.encode(value, 2))}"
   end
 end
