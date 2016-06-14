@@ -7,7 +7,7 @@ defmodule Nex.Opcodes.O96Test do
   end
 
   test "JSR sets a return code in the stack", %{cpu: cpu} do
-    cpu = Nex.CPU.push_stack_value(cpu, 0x00) |> Nex.CPU.push_stack_value(0x03)
+    cpu = Nex.CPU.push_stack_value(cpu, 0x00) |> Nex.CPU.push_stack_value(0x02)
 
     {cpu, 6} = Nex.CPU.run_instruction(cpu)
     assert cpu.registers.program_counter == 0x0003

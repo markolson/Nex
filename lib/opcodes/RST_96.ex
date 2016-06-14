@@ -15,7 +15,7 @@ defmodule Nex.Opcodes.O96 do
   def run(cpu) do
     use Bitwise
     {cpu, [high,low]} = Nex.CPU.pop_stack_values(cpu, 2)
-    address = (high <<< 8) + low
+    address = ((high <<< 8) + low) + 1
 
     op_log = %{bytes: [], log: format(address)}
     {Nex.CPU.update_pc(cpu, address), @cycles, op_log}
