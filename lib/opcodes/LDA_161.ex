@@ -18,10 +18,6 @@ defmodule Nex.Opcodes.O161 do
   def run(cpu) do
     alias Nex.CPU.StatusRegister
     use Bitwise
-s = """
-CFF0  A2 00     LDX #$00                        A:5C X:03 Y:69 P:27 SP:FB CYC:226
-CFF2  A1 FF     LDA ($FF,X) @ FF = 0400 = 5D    A:5C X:00 Y:69 P:27 SP:FB CYC:232
-"""
     {cpu, [offset]} = Nex.CPU.read_from_pc(cpu, 1)
     x = cpu.registers.x
 
