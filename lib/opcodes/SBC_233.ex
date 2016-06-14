@@ -11,17 +11,6 @@ defmodule Nex.Opcodes.O233 do
   |  Immediate     |   SBC #Oper           |    E9   |    2    |    2     |
   +----------------+-----------------------+---------+---------+----------+
   * Add 1 when page boundary is crossed.
-
-    unsigned int temp = AC - src - (IF_CARRY() ? 0 : 1);
-    SET_SIGN(temp);
-    SET_ZERO(temp & 0xff);  /* Sign and Zero are invalid in decimal mode */
-    SET_OVERFLOW(((AC ^ temp) & 0x80) && ((AC ^ src) & 0x80));
-    if (IF_DECIMAL()) {
-        if ( ((AC & 0xf) - (IF_CARRY() ? 0 : 1)) < (src & 0xf)) /* EP */ temp -= 6;
-        if (temp > 0x99) temp -= 0x60;
-    }
-    SET_CARRY(temp < 0x100);
-    AC = (temp & 0xff);
   """
 
   @cycles 3
