@@ -26,7 +26,7 @@ defmodule Elixir.Nex.Opcodes.O69 do
       |> StatusRegister.set_negative(nv)
       |> StatusRegister.set_zero(nv)
     cpu = Nex.CPU.update_status_reg(cpu, new_registers)
-    op_log = %{bytes: [value], log: format(address, value)}
+    op_log = %{bytes: [address], log: format(address, value)}
     {Nex.CPU.update_reg(cpu, :a, nv), @cycles, op_log}
   end
   

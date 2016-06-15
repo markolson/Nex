@@ -1,4 +1,4 @@
-defmodule Nex.Opcodes.O225 do
+defmodule Nex.Opcodes.O229 do
   @moduledoc """
   SBC          SBC Subtract memory from accumulator with borrow         SBC
                       -
@@ -8,21 +8,17 @@ defmodule Nex.Opcodes.O225 do
   +----------------+-----------------------+---------+---------+----------+
   | Addressing Mode| Assembly Language Form| OP CODE |No. Bytes|No. Cycles|
   +----------------+-----------------------+---------+---------+----------+
-  |  (Indirect,X)  |   SBC (Oper,X)        |    E1   |    2    |    6     |
+  |  Zero Page     |   SBC Oper            |    E5   |    2    |    3     |
   +----------------+-----------------------+---------+---------+----------+
   * Add 1 when page boundary is crossed.
   """
 
-  @cycles 6
+  @cycles 3
   def run(cpu) do
     use Bitwise
     alias Nex.CPU.StatusRegister
-    {cpu, [offset]} = Nex.CPU.read_from_pc(cpu, 1)
-    x = cpu.registers.x
-
-    <<zero_page_address::size(8), zp_next::size(8)>> = <<(x + offset)::size(8),(x + offset + 1)::size(8)>>
-    mem_address = Nex.CPU.retrieve(cpu, zero_page_address) + (Nex.CPU.retrieve(cpu, zp_next)  <<< 8)
-    value = Nex.CPU.retrieve(cpu, mem_address)
+    {cpu, [address]} = Nex.CPU.read_from_pc(cpu, 1)
+    value = Nex.CPU.retrieve(cpu, address)
 
     ac = cpu.registers.a
     temp = ac - value - (if cpu.registers.status.carry_flag == 1, do: 0, else: 1)
@@ -46,13 +42,12 @@ defmodule Nex.Opcodes.O225 do
     new_registers = new_registers |> StatusRegister.set_carry(temp >= 0)
     cpu = Nex.CPU.update_status_reg(cpu, new_registers)
     
-    op_log = %{bytes: [value], log: format(offset, zero_page_address, mem_address, value)}
+    op_log = %{bytes: [value], log: format(address, value)}
     <<end_value::size(8),_::binary>> = <<temp>>
     {Nex.CPU.update_reg(cpu, :a, end_value), @cycles, op_log}
   end
 
-  def format(offset, zero_page_address, mem_address, value) do
-    #LDA ($80,X) @ 80 = 0200 = 5A
-    "SBC ($#{String.upcase(Hexate.encode(offset))},X) @ #{String.upcase(Hexate.encode(zero_page_address))} = #{String.upcase(Hexate.encode(mem_address, 4))} = #{String.upcase(Hexate.encode(value, 2))}"
+  def format(address, old_value_for_logging) do
+    "SBC $#{String.upcase(Hexate.encode(address, 2))} = #{Hexate.encode(old_value_for_logging,2)}"
   end
 end
